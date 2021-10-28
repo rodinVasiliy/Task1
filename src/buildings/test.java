@@ -67,11 +67,11 @@ public class test {
 
         printBuilding(building);
 
-/*        System.out.println("Deleting Office:");
+        System.out.println("Deleting Office:");
         int numOfficeToDelete = (int) (Math.random() * building.getCountSpaces());
         building.eraseSpace(numOfficeToDelete);
 
-        printBuilding(building);*/
+        printBuilding(building);
 
     }
 }
