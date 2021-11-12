@@ -1,5 +1,12 @@
 package buildings;
 
+import buildingStreams.Buildings;
+
+import java.io.*;
+import java.util.Locale;
+import java.util.Scanner;
+import java.util.function.BiConsumer;
+
 public class test {
 
     static void printBuilding(Building building) {
@@ -16,7 +23,8 @@ public class test {
 
 
     public static void main(String[] args) {
-        int rangeCountOffices = 20;
+
+/*        int rangeCountOffices = 20;
         int rangeFloors = 10;
         int rangeCountRoomsInOffice = 5;
         int rangeSpace = 100;
@@ -34,44 +42,116 @@ public class test {
             officeFloors[i] = new OfficeFloor(offices);
         }
         Building building = new OfficeBuilding(officeFloors);
-        System.out.println("count floors = " + building.getCountFloors());
-        System.out.println("count Offices = " + building.getCountSpaces());
-        System.out.println("sum space = " + building.getSumArea());
-        System.out.println("best space = " + building.getBestSpace());
-        System.out.println("sum rooms = " + building.getSumCountRooms());
-        System.out.println();
 
-        printBuilding(building);
+        System.out.println(building.toString());
+        printBuilding(building);*/
 
-        System.out.println("Sorting:");
-        Space[] offices = building.getSortedSpaces();
-        for (int i = 0; i < building.getCountSpaces(); ++i) {
-            System.out.print(offices[i].getArea() + " ");
+        // TODO try с ресурсом!
+/*      try {
+            FileOutputStream fout = new FileOutputStream("fout");
+            Buildings.outputBuilding(building, fout);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
-        System.out.println();
+        try {
+            FileInputStream fin = new FileInputStream("fout");
+            Building tmp = Buildings.inputBuilding(fin);
+            printBuilding(tmp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }*/
 
-        printBuilding(building);
+/*      try {
+            FileWriter fwr = new FileWriter("fwr");
+            Buildings.writeBuilding(building, fwr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println("Changing Office:");
-        Office newOffice = new Office(100, 10);
-        int numChangeOffice = (int) (Math.random() * building.getCountSpaces());
-        building.changeSpace(numChangeOffice, newOffice);
+        try {
+            FileReader fr = new FileReader("fwr");
+            Building tmp = Buildings.readBuilding(fr);
+            printBuilding(tmp);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }*/
 
-        printBuilding(building);
+/*        try {
+            FileOutputStream fout2 = new FileOutputStream("fout2");
+            Buildings.serializeBuilding(building, fout2);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
 
-        System.out.println("Adding Office:");
-        Office newOfficeToAdd = new Office(150, 20);
-        int numAddOffice = (int) (Math.random() * building.getCountSpaces());
-        building.addSpace(numAddOffice, newOfficeToAdd);
+        try{
+            FileInputStream fin2 = new FileInputStream("fout2");
+            Building tmp = Buildings.deserializeBuilding(fin2);
+            printBuilding(tmp);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }*/
 
-        printBuilding(building);
+/*        try {
+            FileWriter fwr = new FileWriter("fwr1");
+            Buildings.writeBuildingFormat(building, fwr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println("Deleting Office:");
-        int numOfficeToDelete = (int) (Math.random() * building.getCountSpaces());
-        building.eraseSpace(numOfficeToDelete);
+        try{
+            FileReader fr = new FileReader("fwr1");
+            Scanner scanner = new Scanner(fr);
+            scanner.useLocale(Locale.US);
+            Building tmp = Buildings.readBuilding(scanner);
+            printBuilding(tmp);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }*/
 
-        printBuilding(building);
+
+/*
+        // проверка глубокого клонирования DWELLING
+        Space flat1 = new Flat(10.0F, 5);
+        Space flat2 = (Space) flat1.clone();
+
+        flat2.setCountRooms(10);
+
+
+        Floor dwellingFloor1 = new DwellingFloor(flat1, flat2);
+        Floor dwellingFloor2 = (Floor) dwellingFloor1.clone();
+
+        dwellingFloor2.getSpace(1).setCountRooms(30);
+
+        Building dwelling1 = new Dwelling(dwellingFloor1, dwellingFloor2);
+        Building dwelling2 = (Building) dwelling1.clone();
+
+        dwelling2.addSpace(dwelling2.getCountSpaces(),new Flat(44.0F,4));
+
+        System.out.println(dwelling1);
+        System.out.println(dwelling2);*/
+
+/*        // проверка глубокого клонирования OfficeBuilding
+        Space office1 = new Office(10.0F, 5);
+        Space office2 = (Office) office1.clone();
+
+        office2.setSpace(20.0F);
+
+        Floor floor1 = new OfficeFloor(office1, office2);
+        Floor floor2 = (Floor) floor1.clone();
+        floor2.getSpace(1).setCountRooms(30);
+
+        Building dwelling1 = new OfficeBuilding(floor1, floor2);
+        Building dwelling2 = (Building) dwelling1.clone();
+
+        dwelling2.eraseSpace(0);
+
+        System.out.println(dwelling1);
+        System.out.println(dwelling2);*/
 
     }
 }

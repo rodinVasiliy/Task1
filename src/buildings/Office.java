@@ -3,8 +3,11 @@ package buildings;
 import Exceptions.InvalidRoomsCountException;
 import Exceptions.InvalidSpaceAreaException;
 
-public class Office implements Space {
-    private int area;
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+
+public class Office implements Space, Serializable, Cloneable {
+    private float area;
     private int numOfRooms;
 
     public Office() {
@@ -12,7 +15,7 @@ public class Office implements Space {
         numOfRooms = 1;
     }
 
-    public Office(int newArea, int newNumOfRooms) {
+    public Office(float newArea, int newNumOfRooms) {
         if (newArea <= 0) throw new InvalidSpaceAreaException("InvalidSpaceAreaException");
         if (newNumOfRooms <= 0) throw new InvalidRoomsCountException("InvalidRoomsCountException");
         area = newArea;
@@ -25,19 +28,71 @@ public class Office implements Space {
     }
 
     @Override
-    public void changeCountRooms(int count) {
+    public void setCountRooms(int count) {
         if (count <= 0) throw new InvalidRoomsCountException("InvalidRoomsCountException");
         this.numOfRooms = count;
     }
 
     @Override
-    public int getArea() {
+    public float getArea() {
         return area;
     }
 
     @Override
-    public void changeSpace(int newSpace) {
+    public void setSpace(float newSpace) {
         if (newSpace <= 0) throw new InvalidSpaceAreaException("InvalidSpaceAreaException");
         this.area = newSpace;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Office ").append("(").append(numOfRooms).append(", ").append(area).append(")");
+        return new String(sb);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof Office)) {
+            return false;
+        }
+        Office office = (Office) object;
+        return (this.numOfRooms == office.numOfRooms) && (this.area == office.area);
+    }
+
+    @Override
+    public Object clone() {
+        Object copy = null;
+        try {
+            copy = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return copy;
+    }
+
+    @Override
+    public int hashCode() {
+        byte[] arrDoubleBytes;
+        double areaDouble = getArea();
+        //преобразуем общую сумму площадей в byte[]
+        arrDoubleBytes = ByteBuffer.allocate(8).putDouble(areaDouble).array();
+        byte[] arrFirstBytes = new byte[4];
+        byte[] arrLastBytes = new byte[4];
+
+        // в первый массив - первые 4 байта, во второй - последние 4 байта
+        for (int i = 0; i < 4; i++) {
+            arrFirstBytes[i] = arrDoubleBytes[i];
+            arrLastBytes[i] = arrDoubleBytes[4 + i];
+        }
+
+        int intFirstByte = ByteBuffer.wrap(arrFirstBytes).getInt();
+        int intSecondByte = ByteBuffer.wrap(arrLastBytes).getInt();
+
+        return getCountRooms() ^ intFirstByte ^ intSecondByte;
+    }
+
 }

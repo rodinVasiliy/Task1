@@ -28,8 +28,8 @@ public class PlacementExchanger {
             throw new InexchangeableSpacesException("InexchangeableSpacesException");
 
         Space tmpSpace = floor1.getSpace(index1);
-        floor1.changeSpace(index1, floor2.getSpace(index2));
-        floor2.changeSpace(index2, tmpSpace);
+        floor1.setSpace(index1, floor2.getSpace(index2));
+        floor2.setSpace(index2, tmpSpace);
     }
 
     public static void exchangeBuildingFloors(Building building1, int index1, Building building2, int index2)
@@ -42,8 +42,8 @@ public class PlacementExchanger {
             throw new InexchangeableFloorsException("InexchangeableFloorsException");
 
         Floor tmpFloor = building1.getFloor(index1);
-        building1.changeFloor(index1, building2.getFloor(index2));
-        building2.changeFloor(index2, tmpFloor);
+        building1.setFloor(index1, building2.getFloor(index2));
+        building2.setFloor(index2, tmpFloor);
     }
 
 

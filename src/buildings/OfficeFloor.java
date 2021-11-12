@@ -2,25 +2,64 @@ package buildings;
 
 import Exceptions.SpaceIndexOutOfBoundsException;
 
-public class OfficeFloor implements Floor {
+import java.io.Serializable;
 
-    private static class Node {
+public class OfficeFloor implements Floor, Serializable, Cloneable {
+
+    private static class Node implements Serializable, Cloneable {
         private Space office;
         private Node next;
 
         public Node(Space newOffice) {
-            office = newOffice;
+            // office = newOffice;
+            office = new Office(newOffice.getArea(), newOffice.getCountRooms());
             next = null;
+        }
+
+        public Node(Node rhs) {
+            office = new Office();
+            next = null;
+            office.setCountRooms(rhs.office.getCountRooms());
+            office.setSpace(rhs.office.getArea());
         }
 
         public Node() {
             office = new Office();
             next = null;
         }
+
+
+        // TODO: удалить
+        @Override
+        public Node clone() {
+            try {
+                Node clone = (Node) super.clone();
+                // clone.office = (Space) office.clone();
+                clone.next = (Node) next.clone();
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
+        }
     }
 
 
     private Node head;
+
+    @Override
+    public Object clone() {
+        OfficeFloor floor = new OfficeFloor();
+        for(int i = 0; i < getCountSpaces(); ++i){
+            floor.addNode(i, new Node(getNode(i)));
+        }
+        try {
+            Object clone = super.clone();
+            ((OfficeFloor)clone).head = floor.head;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 
     public int getCountSpaces() {
         if (head == null) return 0;
@@ -56,7 +95,7 @@ public class OfficeFloor implements Floor {
         head = tmpHead;
     }
 
-    public OfficeFloor(Space ... offices) {
+    public OfficeFloor(Space... offices) {
         if (offices.length == 0) {
             head = null;
             return;
@@ -88,6 +127,11 @@ public class OfficeFloor implements Floor {
 
     private void addNode(int num, Node node) {
         int count = getCountSpaces();
+        if (count == 0) {
+            head = node;
+            head.next = node;
+            return;
+        }
         if (num == 0) {
             Node currentNode = head;
             for (int i = 0; i < count; ++i) {
@@ -131,7 +175,7 @@ public class OfficeFloor implements Floor {
     }
 
 
-    public int getSumArea() {
+    public float getSumArea() {
         int count = getCountSpaces();
         Node currentNode = head;
         int sumSpace = 0;
@@ -167,7 +211,7 @@ public class OfficeFloor implements Floor {
     }
 
     @Override
-    public Space getSpace(int num)  {
+    public Space getSpace(int num) {
         if (num >= this.getCountSpaces())
             throw new SpaceIndexOutOfBoundsException("SpaceIndexOutOfBoundsException");
         Node node = getNode(num);
@@ -175,7 +219,7 @@ public class OfficeFloor implements Floor {
     }
 
     @Override
-    public void changeSpace(int num, Space newSpace) {
+    public void setSpace(int num, Space newSpace) {
         if (num >= this.getCountSpaces())
             throw new SpaceIndexOutOfBoundsException("SpaceIndexOutOfBoundsException");
         Node node = getNode(num);
@@ -197,15 +241,54 @@ public class OfficeFloor implements Floor {
         deleteNode(num);
     }
 
-    public int getBestSpace() {
+    public float getBestSpace() {
         int count = getCountSpaces();
         Node currentNode = head;
-        int bestSpace = 0;
+        float bestSpace = 0;
         for (int i = 0; i < count; ++i) {
             if (bestSpace < currentNode.office.getArea()) bestSpace = currentNode.office.getArea();
             currentNode = currentNode.next;
         }
         return bestSpace;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Office Floor ").append("(").append(getCountSpaces()).append(", ");
+        for (int i = 0; i < getCountSpaces() - 1; ++i) {
+            sb.append(getSpace(i).toString()).append(",");
+        }
+        sb.append(getSpace(getCountSpaces() - 1));
+        sb.append(")");
+        return new String(sb);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof OfficeFloor officeFloor)) {
+            return false;
+        }
+        if (this.getCountSpaces() != officeFloor.getCountSpaces()) return false;
+
+        for (int i = 0; i < getCountSpaces(); ++i) {
+            if (!this.getSpace(i).equals(officeFloor.getSpace(i))) return false;
+        }
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCountSpaces();
+        for (int i = 0; i < getCountSpaces(); ++i) {
+            result ^= this.getSpace(i).hashCode();
+        }
+        return result;
+    }
+
 
 }

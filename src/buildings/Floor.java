@@ -6,7 +6,7 @@ public interface Floor {
     int getCountSpaces();
 
     // получения общей площади помещений на этаже
-    int getSumArea();
+    float getSumArea();
 
     // получения общего количества комнат в помещениях этажа
     int getSumCountRooms();
@@ -18,7 +18,7 @@ public interface Floor {
     Space getSpace(int num);
 
     // изменения помещения по его номеру и ссылке на новое помещение
-    void changeSpace(int num, Space newSpace);
+    void setSpace(int num, Space newSpace);
 
     // вставки помещения по его номеру и ссылке на новое помещение
     void addSpace(int num, Space newSpace) ;
@@ -27,6 +27,8 @@ public interface Floor {
     void eraseSpace(int num);
 
     // получения лучшего помещения на этаже
-    int getBestSpace();
+    float getBestSpace();
+
+    Object clone();
 
 }

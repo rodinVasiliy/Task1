@@ -1,6 +1,6 @@
 package buildings;
 
-public interface Building {
+public interface Building  {
 
     int getCountFloors();
 
@@ -8,7 +8,7 @@ public interface Building {
     int getCountSpaces();
 
     // общая площадь.
-    int getSumArea();
+    float getSumArea();
 
     int getSumCountRooms();
 
@@ -16,20 +16,24 @@ public interface Building {
 
     Floor getFloor(int num);
 
-    void changeFloor(int num, Floor newDwellingFloor);
+    void setFloor(int num, Floor newDwellingFloor);
 
     // получить помещение по номеру
     Space getSpace(int num);
 
-    void changeSpace(int num, Space newSpace);
+    void setSpace(int num, Space newSpace);
 
     void addSpace(int num, Space newSpace);
 
     void eraseSpace(int num);
 
     // получение лучшего помещения
-    int getBestSpace();
+    float getBestSpace();
 
     Space[] getSortedSpaces();
+
+    String toString();
+
+    Object clone();
 
 }

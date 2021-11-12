@@ -4,9 +4,11 @@ package buildings;
 import Exceptions.FloorIndexOutOfBoundsException;
 import Exceptions.SpaceIndexOutOfBoundsException;
 
-public class OfficeBuilding implements Building {
+import java.io.Serializable;
 
-    private static class Node {
+public class OfficeBuilding implements Building, Serializable, Cloneable {
+
+    private static class Node implements Serializable {
         Floor floor;
         Node next;
         Node prev;
@@ -32,20 +34,40 @@ public class OfficeBuilding implements Building {
 
     // - приватный метод добавления узла в список по номеру;
     private void addNode(int num, Node newNode) {
-        if (num == 0) {
-            newNode.prev = head.prev;
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-            return;
+        if (num > getCountFloors()) throw new FloorIndexOutOfBoundsException("FloorIndexOutOfBoundsException");
+        else if (num == getCountFloors()) {
+            // вставка в конец
+            if (num == 0) {
+                head = newNode;
+                newNode.prev = head;
+                newNode.next = head;
+                return;
+            } else {
+                Node currentNode = head;
+                for (int i = 0; i < num - 1; ++i) {
+                    currentNode = currentNode.next;
+                }
+                currentNode.next = newNode;
+                newNode.prev = currentNode;
+                newNode.next = head;
+                head.prev = newNode;
+            }
+        } else {
+            // вставка в уже существующий номер списка
+            if (num == 0) {
+                newNode.next = head;
+                newNode.prev = head.prev;
+                head.prev = newNode;
+            } else {
+                Node currentNode = head;
+                for (int i = 0; i < num - 1; ++i) {
+                    currentNode = currentNode.next;
+                }
+                currentNode.next.prev = newNode;
+                newNode.prev = currentNode;
+                newNode.next = currentNode.next;
+            }
         }
-        Node currentNode = head;
-        for (int i = 0; i < num - 1; ++i) {
-            currentNode = currentNode.next;
-        }
-        currentNode.next.prev = newNode;
-        newNode.prev = currentNode;
-        newNode.next = currentNode.next;
     }
 
     // - приватный метод удаления узла из списка по его номеру.
@@ -91,12 +113,14 @@ public class OfficeBuilding implements Building {
     }*/
 
     // Конструктор может принимать массив этажей офисного здания.
-    OfficeBuilding(Floor ... officeFloors) {
+    public OfficeBuilding(Floor... officeFloors) {
         if (officeFloors.length == 0) {
             head = null;
+            return;
         }
         if (officeFloors.length == 1) {
             head = new Node(officeFloors[0]);
+            return;
         }
         head = new Node(officeFloors[0]);
         Node currentNode = head;
@@ -139,7 +163,7 @@ public class OfficeBuilding implements Building {
 
 
     //Создайте метод получения общей площади помещений здания.
-    public int getSumArea() {
+    public float getSumArea() {
         int sumArea = 0;
         int count = getCountFloors();
         Node currentNode = head;
@@ -201,13 +225,13 @@ public class OfficeBuilding implements Building {
     }
 
     @Override
-    public void changeSpace(int num, Space newSpace) {
+    public void setSpace(int num, Space newSpace) {
         int tmpNum = 0;
         Node currentNode = head;
         int count = getCountFloors();
         for (int i = 0; i < count; ++i) {
             if (num < tmpNum + currentNode.floor.getCountSpaces()) {
-                currentNode.floor.changeSpace(num - tmpNum, newSpace);
+                currentNode.floor.setSpace(num - tmpNum, newSpace);
                 return;
             }
             tmpNum += currentNode.floor.getCountSpaces();
@@ -249,7 +273,7 @@ public class OfficeBuilding implements Building {
     }
 
 
-    public void changeFloor(int num, Floor newFloor) {
+    public void setFloor(int num, Floor newFloor) {
         if (num >= this.getCountFloors())
             throw new FloorIndexOutOfBoundsException("FloorIndexOutOfBoundsException");
         Node node = getNode(num);
@@ -257,8 +281,8 @@ public class OfficeBuilding implements Building {
     }
 
     //Создайте метод getBestSpace() получения самого большого по площади офиса здания.
-    public int getBestSpace() {
-        int bestSpace = 0;
+    public float getBestSpace() {
+        float bestSpace = 0;
         Node currentNode = head;
         int count = getCountFloors();
         for (int i = 0; i < count; ++i) {
@@ -293,5 +317,63 @@ public class OfficeBuilding implements Building {
         return sorted;
 
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("OfficeBuilding (").append(getCountFloors()).append(", ");
+        for (int i = 0; i < getCountFloors() - 1; ++i) {
+            sb.append(getFloor(i).toString()).append(",");
+        }
+        sb.append(getFloor(getCountFloors() - 1));
+        sb.append(")");
+        return new String(sb);
+    }
+
+    @Override
+    public Object clone() {
+        OfficeBuilding building = new OfficeBuilding();
+        for (int i = 0; i < this.getCountFloors(); ++i) {
+            building.addNode(i, new Node((Floor) getFloor(i).clone()));
+        }
+        try {
+            Object clone = super.clone();
+            ((OfficeBuilding) clone).head = building.head;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof OfficeBuilding)) {
+            return false;
+        }
+
+        OfficeBuilding officeBuilding = (OfficeBuilding) object;
+        if (this.getCountFloors() != officeBuilding.getCountFloors()) return false;
+
+        for (int i = 0; i < getCountFloors(); ++i) {
+            if (!this.getFloor(i).equals(officeBuilding.getFloor(i))) return false;
+        }
+
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.getCountFloors();
+        for (int i = 0; i < getCountFloors(); ++i) {
+            result ^= this.getFloor(i).hashCode();
+        }
+        return result;
+    }
+
 
 }

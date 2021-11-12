@@ -4,10 +4,14 @@ public interface Space {
 
     int getCountRooms();
 
-    void changeCountRooms(int count);
+    void setCountRooms(int count);
 
-    int getArea();
+    float getArea();
 
-    void changeSpace(int newSpace);
+    void setSpace(float newSpace);
+
+    String toString();
+
+    Object clone();
 
 }

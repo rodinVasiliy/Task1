@@ -4,17 +4,19 @@ package buildings;
 import Exceptions.FloorIndexOutOfBoundsException;
 import Exceptions.SpaceIndexOutOfBoundsException;
 
-public class Dwelling implements Building {
+import java.io.Serializable;
+
+public class Dwelling implements Building, Serializable, Cloneable {
     private Floor[] dwellingFloors;
 
-    public Dwelling(int countOfFloors, int ... countFlatsArray) {
+    public Dwelling(int countOfFloors, int... countFlatsArray) {
         dwellingFloors = new Floor[countOfFloors];
         for (int i = 0; i < countOfFloors; ++i) {
             dwellingFloors[i] = new OfficeFloor(countFlatsArray[i]);
         }
     }
 
-    public Dwelling(Floor ... dwellingFloors1) {
+    public Dwelling(Floor... dwellingFloors1) {
         dwellingFloors = new Floor[dwellingFloors1.length];
         System.arraycopy(dwellingFloors1, 0, dwellingFloors, 0, dwellingFloors1.length);
     }
@@ -33,8 +35,8 @@ public class Dwelling implements Building {
         return flatsCount;
     }
 
-    public int getSumArea() {
-        int sumArea = 0;
+    public float getSumArea() {
+        float sumArea = 0;
         for (Floor dwellingFloor : dwellingFloors) {
             sumArea += dwellingFloor.getSumArea();
         }
@@ -58,7 +60,7 @@ public class Dwelling implements Building {
     @Override
     public Floor getFloor(int num) {
         if (num >= this.getCountFloors())
-            throw  new FloorIndexOutOfBoundsException("FloorIndexOutOfBoundsException");
+            throw new FloorIndexOutOfBoundsException("FloorIndexOutOfBoundsException");
         return dwellingFloors[num];
     }
 
@@ -75,11 +77,11 @@ public class Dwelling implements Building {
     }
 
     @Override
-    public void changeSpace(int num, Space newSpace)  {
+    public void setSpace(int num, Space newSpace) {
         int count = 0;
         for (Floor dwellingFloor : dwellingFloors) {
             if (num < count + dwellingFloor.getCountSpaces()) {
-                dwellingFloor.changeSpace(num - count, (Flat) newSpace);
+                dwellingFloor.setSpace(num - count, (Flat) newSpace);
                 return;
             }
             count += dwellingFloor.getCountSpaces();
@@ -127,7 +129,7 @@ public class Dwelling implements Building {
     }
 
 
-    public void changeFloor(int num, Floor newDwellingFloor) {
+    public void setFloor(int num, Floor newDwellingFloor) {
         if (num >= this.getCountFloors()) throw new FloorIndexOutOfBoundsException("FloorIndexOutOfBoundsException");
         Floor[] newArray = new Floor[dwellingFloors.length];
         System.arraycopy(dwellingFloors, 0, newArray, 0, num);
@@ -138,8 +140,8 @@ public class Dwelling implements Building {
     }
 
 
-    public int getBestSpace() {
-        int max = 0;
+    public float getBestSpace() {
+        float max = 0;
         for (Floor dwellingFloor : dwellingFloors) {
             if (max < dwellingFloor.getBestSpace()) max = dwellingFloor.getBestSpace();
         }
@@ -169,5 +171,62 @@ public class Dwelling implements Building {
 
         return sorted;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Dwelling (").append(getCountFloors()).append(", ");
+        for (int i = 0; i < getCountFloors() - 1; ++i) {
+            sb.append(getFloor(i).toString()).append(",");
+        }
+        sb.append(getFloor(getCountFloors() - 1));
+        sb.append(")");
+        return new String(sb);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof Dwelling)) {
+            return false;
+        }
+
+        Dwelling dwelling = (Dwelling) object;
+        if (this.getCountFloors() != dwelling.getCountFloors()) return false;
+
+        for (int i = 0; i < getCountFloors(); ++i) {
+            if (!this.getFloor(i).equals(dwelling.getFloor(i))) return false;
+        }
+
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.getCountFloors();
+        for (int i = 0; i < getCountFloors(); ++i) {
+            result ^= this.getFloor(i).hashCode();
+        }
+        return result;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            Object clone = super.clone();
+             ((Dwelling)clone).dwellingFloors = new Floor[this.getCountFloors()];
+            // ((Dwelling)clone).dwellingFloors = this.dwellingFloors.clone();
+            for (int i = 0; i < getCountFloors(); ++i) {
+                ((Dwelling)clone).dwellingFloors[i] = (Floor) this.getFloor(i).clone();
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
 
 }
