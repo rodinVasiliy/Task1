@@ -1,8 +1,11 @@
-package buildings;
+package buildings.office;
 
 
 import Exceptions.FloorIndexOutOfBoundsException;
 import Exceptions.SpaceIndexOutOfBoundsException;
+import buildings.Building;
+import buildings.Floor;
+import buildings.Space;
 
 import java.io.Serializable;
 

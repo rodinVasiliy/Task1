@@ -1,26 +1,30 @@
-package buildings;
+package buildings.dwelling;
 
 import Exceptions.InvalidRoomsCountException;
 import Exceptions.InvalidSpaceAreaException;
+import buildings.Space;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-public class Office implements Space, Serializable, Cloneable {
+public class Flat implements Space, Serializable, Cloneable {
+
     private float area;
     private int numOfRooms;
 
-    public Office() {
-        area = 250;
-        numOfRooms = 1;
+    public Flat() {
+        area = 50;
+        numOfRooms = 2;
     }
 
-    public Office(float newArea, int newNumOfRooms) {
+    public Flat(float newArea, int newNumOfRooms) {
         if (newArea <= 0) throw new InvalidSpaceAreaException("InvalidSpaceAreaException");
         if (newNumOfRooms <= 0) throw new InvalidRoomsCountException("InvalidRoomsCountException");
         area = newArea;
         numOfRooms = newNumOfRooms;
     }
+
+
 
     @Override
     public int getCountRooms() {
@@ -29,7 +33,7 @@ public class Office implements Space, Serializable, Cloneable {
 
     @Override
     public void setCountRooms(int count) {
-        if (count <= 0) throw new InvalidRoomsCountException("InvalidRoomsCountException");
+        if (numOfRooms <= 0) throw new InvalidRoomsCountException("InvalidRoomsCountException");
         this.numOfRooms = count;
     }
 
@@ -40,14 +44,14 @@ public class Office implements Space, Serializable, Cloneable {
 
     @Override
     public void setSpace(float newSpace) {
-        if (newSpace <= 0) throw new InvalidSpaceAreaException("InvalidSpaceAreaException");
+        if (area <= 0) throw new InvalidSpaceAreaException("InvalidSpaceAreaException");
         this.area = newSpace;
     }
 
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("Office ").append("(").append(numOfRooms).append(", ").append(area).append(")");
+        sb.append("Flat ").append("(").append(numOfRooms).append(", ").append(area).append(")");
         return new String(sb);
     }
 
@@ -56,11 +60,11 @@ public class Office implements Space, Serializable, Cloneable {
         if (object == this) {
             return true;
         }
-        if (!(object instanceof Office)) {
+        if (!(object instanceof Flat)) {
             return false;
         }
-        Office office = (Office) object;
-        return (this.numOfRooms == office.numOfRooms) && (this.area == office.area);
+        Flat flat = (Flat) (object);
+        return (this.area == flat.area) && (this.numOfRooms == flat.numOfRooms);
     }
 
     @Override

@@ -1,11 +1,7 @@
 package buildings;
 
-import buildingStreams.Buildings;
-
-import java.io.*;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.function.BiConsumer;
+import buildings.office.Office;
+import buildings.office.OfficeFloor;
 
 public class test {
 
@@ -47,6 +43,7 @@ public class test {
         printBuilding(building);*/
 
         // TODO try с ресурсом!
+        // TODO добавить поле с id сериализации!
 /*      try {
             FileOutputStream fout = new FileOutputStream("fout");
             Buildings.outputBuilding(building, fout);
@@ -135,7 +132,7 @@ public class test {
         System.out.println(dwelling1);
         System.out.println(dwelling2);*/
 
-/*        // проверка глубокого клонирования OfficeBuilding
+/*      // проверка глубокого клонирования OfficeBuilding
         Space office1 = new Office(10.0F, 5);
         Space office2 = (Office) office1.clone();
 
