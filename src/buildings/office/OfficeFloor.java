@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class OfficeFloor implements Floor, Serializable, Cloneable {
 
-    private static class Node implements Serializable, Cloneable {
+    private static class Node implements Serializable{
         private Space office;
         private Node next;
 
@@ -31,7 +31,7 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
         }
 
 
-        // TODO: удалить
+/*        // TODO: удалить
         @Override
         public Node clone() {
             try {
@@ -42,7 +42,7 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
             } catch (CloneNotSupportedException e) {
                 throw new AssertionError();
             }
-        }
+        }*/
     }
 
 
@@ -54,13 +54,7 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
         for(int i = 0; i < getCountSpaces(); ++i){
             floor.addNode(i, new Node(getNode(i)));
         }
-        try {
-            Object clone = super.clone();
-            ((OfficeFloor)clone).head = floor.head;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        return floor;
     }
 
     public int getCountSpaces() {

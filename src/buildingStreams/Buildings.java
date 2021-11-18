@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.Formatter;
 import java.util.Scanner;
 
+
 public class Buildings {
 
     // записи данных о здании в байтовый поток
@@ -29,14 +30,6 @@ public class Buildings {
             System.out.println("Some error occurred!");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (out1 != null) {
-                    out1.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -48,35 +41,25 @@ public class Buildings {
         try {
             in1 = new DataInputStream(in);
             int numberFloor = in1.readInt();
-            // System.out.println(numberFloor);
-            building = new OfficeBuilding(new OfficeFloor[numberFloor]);
+            building = new OfficeBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloor(i, currentFloor);
 
                 int numberSpaces = in1.readInt();
-                // System.out.println(numberSpaces);
 
                 for (int j = 0; j < numberSpaces; j++) {
                     Space currentSpace = new Office();
                     int numberRooms = in1.readInt();
                     currentSpace.setCountRooms(numberRooms);
-                    // System.out.println(numberRooms);
                     float area = in1.readFloat();
                     currentSpace.setSpace(area);
                     currentFloor.addSpace(j, currentSpace);
-                    // System.out.println(area);
                 }
             }
-            in1.close();
+
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (in1 != null) in1.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return building;
     }
@@ -99,7 +82,6 @@ public class Buildings {
                     printWriter.print(" ");
                 }
             }
-            printWriter.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,39 +99,25 @@ public class Buildings {
         StreamTokenizer in1 = new StreamTokenizer(in);
         Building building = null;
         try {
-
             int numberFloor = (int) getNextIntFromTokenaizer(in1);
-
-            // System.out.println(numberFloor);
-            building = new OfficeBuilding(new OfficeFloor[numberFloor]);
+            building = new OfficeBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloor(i, currentFloor);
-
                 int numberSpaces = (int) getNextIntFromTokenaizer(in1);
-
-                // System.out.println(numberSpaces);
-
                 for (int j = 0; j < numberSpaces; j++) {
                     Space currentSpace = new Office();
                     currentFloor.addSpace(j, currentSpace);
-
                     int numberRooms = (int) getNextIntFromTokenaizer(in1);
-
                     currentSpace.setCountRooms(numberRooms);
-                    // System.out.println(numberRooms);
-
                     float area = (float) getNextIntFromTokenaizer(in1);
-
                     currentSpace.setSpace(area);
-                    // System.out.println(area);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return building;
-
     }
 
     // сериализации здания в байтовый поток
@@ -158,15 +126,8 @@ public class Buildings {
         try {
             out1 = new ObjectOutputStream(out);
             out1.writeObject(building);
-            out1.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (out1 != null) out1.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -178,15 +139,8 @@ public class Buildings {
         try {
             in1 = new ObjectInputStream(in);
             building = (Building) in1.readObject();
-
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (in1 != null) in1.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return building;
 
@@ -198,7 +152,6 @@ public class Buildings {
         StringBuilder str = new StringBuilder("");
         str.append("NumberFloors: ").append(numberFloors);
         try {
-
             for (int i = 0; i < building.getCountFloors(); i++) {
                 str.append(" NumberFlats: ");
                 str.append(building.getFloor(i).getCountSpaces());
@@ -210,7 +163,6 @@ public class Buildings {
                 }
             }
             f.format("Building: %s\n", str.toString());
-            f.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,29 +175,23 @@ public class Buildings {
             String tmp = scanner.next();
         }
         numberFloors = scanner.nextInt();
-
         Floor[] floorsArray = new Floor[numberFloors];
         int numberSpaces = 0;
         int numberRooms = 0;
         float area = 0;
-
         for (int i = 0; i < numberFloors; i++) {
             while (!scanner.hasNextInt()) {
                 String tmp = scanner.next();
-                // System.out.println(tmp);
             }
             numberSpaces = scanner.nextInt();
-
             floorsArray[i] = new OfficeFloor(numberSpaces);
             for (int j = 0; j < numberSpaces; j++) {
                 while (!scanner.hasNextInt()) {
                     String tmp = scanner.next();
-                    // System.out.println(tmp);
                 }
                 numberRooms = scanner.nextInt();
                 while (!scanner.hasNextFloat()) {
                     String tmp = scanner.next();
-                   //  System.out.println(tmp);
                 }
                 area = scanner.nextFloat();
                 floorsArray[i].addSpace(j, new Office(area, numberRooms));

@@ -1,7 +1,14 @@
 package buildings;
 
+import buildingStreams.Buildings;
 import buildings.office.Office;
+import buildings.office.OfficeBuilding;
 import buildings.office.OfficeFloor;
+
+import java.io.*;
+import java.util.Locale;
+import java.util.Scanner;
+import java.util.function.BiConsumer;
 
 public class test {
 
@@ -20,7 +27,7 @@ public class test {
 
     public static void main(String[] args) {
 
-/*        int rangeCountOffices = 20;
+        int rangeCountOffices = 20;
         int rangeFloors = 10;
         int rangeCountRoomsInOffice = 5;
         int rangeSpace = 100;
@@ -40,75 +47,63 @@ public class test {
         Building building = new OfficeBuilding(officeFloors);
 
         System.out.println(building.toString());
-        printBuilding(building);*/
+        printBuilding(building);
 
-        // TODO try с ресурсом!
-        // TODO добавить поле с id сериализации!
-/*      try {
-            FileOutputStream fout = new FileOutputStream("fout");
+      try (FileOutputStream fout = new FileOutputStream("fout")) {
             Buildings.outputBuilding(building, fout);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            FileInputStream fin = new FileInputStream("fout");
+        try (FileInputStream fin = new FileInputStream("fout")){
             Building tmp = Buildings.inputBuilding(fin);
             printBuilding(tmp);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-/*      try {
-            FileWriter fwr = new FileWriter("fwr");
+
+
+      try (FileWriter fwr = new FileWriter("fwr");) {
             Buildings.writeBuilding(building, fwr);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            FileReader fr = new FileReader("fwr");
+        try (FileReader fr = new FileReader("fwr");) {
             Building tmp = Buildings.readBuilding(fr);
             printBuilding(tmp);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-/*        try {
-            FileOutputStream fout2 = new FileOutputStream("fout2");
+        try (FileOutputStream fout2 = new FileOutputStream("fout2");) {
             Buildings.serializeBuilding(building, fout2);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try{
-            FileInputStream fin2 = new FileInputStream("fout2");
+        try (FileInputStream fin2 = new FileInputStream("fout2");) {
             Building tmp = Buildings.deserializeBuilding(fin2);
             printBuilding(tmp);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-/*        try {
-            FileWriter fwr = new FileWriter("fwr1");
+        try (FileWriter fwr = new FileWriter("fwr1");) {
             Buildings.writeBuildingFormat(building, fwr);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try{
-            FileReader fr = new FileReader("fwr1");
+        try (FileReader fr = new FileReader("fwr1");) {
             Scanner scanner = new Scanner(fr);
             scanner.useLocale(Locale.US);
             Building tmp = Buildings.readBuilding(scanner);
             printBuilding(tmp);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
 
 /*
@@ -132,7 +127,7 @@ public class test {
         System.out.println(dwelling1);
         System.out.println(dwelling2);*/
 
-/*      // проверка глубокого клонирования OfficeBuilding
+/*        // проверка глубокого клонирования OfficeBuilding
         Space office1 = new Office(10.0F, 5);
         Space office2 = (Office) office1.clone();
 

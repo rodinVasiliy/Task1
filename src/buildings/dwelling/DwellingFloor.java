@@ -18,7 +18,11 @@ public class DwellingFloor implements Floor, Serializable, Cloneable {
 
     public DwellingFloor(Space... array) {
         flats = new Space[array.length];
-        System.arraycopy(array, 0, flats, 0, flats.length);
+        // System.arraycopy(array, 0, flats, 0, flats.length);
+        // с клонированием можно будет так:
+        for (int i = 0; i < array.length; i++) {
+            flats[i] = (Space) array[i].clone();
+        }
     }
 
     @Override

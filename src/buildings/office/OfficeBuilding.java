@@ -21,7 +21,6 @@ public class OfficeBuilding implements Building, Serializable, Cloneable {
             next = null;
             prev = null;
         }
-
     }
 
     private Node head;
@@ -339,13 +338,7 @@ public class OfficeBuilding implements Building, Serializable, Cloneable {
         for (int i = 0; i < this.getCountFloors(); ++i) {
             building.addNode(i, new Node((Floor) getFloor(i).clone()));
         }
-        try {
-            Object clone = super.clone();
-            ((OfficeBuilding) clone).head = building.head;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        return building;
     }
 
 
