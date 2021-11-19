@@ -142,12 +142,16 @@ public class Dwelling implements Building, Serializable, Cloneable {
     }
 
 
-    public float getBestSpace() {
+    public Space getBestSpace() {
         float max = 0;
+        Space bestSpace = null;
         for (Floor dwellingFloor : dwellingFloors) {
-            if (max < dwellingFloor.getBestSpace()) max = dwellingFloor.getBestSpace();
+            if (max < dwellingFloor.getBestSpace().getArea()) {
+                bestSpace = dwellingFloor.getBestSpace();
+                max = bestSpace.getArea();
+            }
         }
-        return max;
+        return bestSpace;
     }
 
     @Override
@@ -219,10 +223,10 @@ public class Dwelling implements Building, Serializable, Cloneable {
     public Object clone() {
         try {
             Object clone = super.clone();
-             ((Dwelling)clone).dwellingFloors = new Floor[this.getCountFloors()];
+            ((Dwelling) clone).dwellingFloors = new Floor[this.getCountFloors()];
             // ((Dwelling)clone).dwellingFloors = this.dwellingFloors.clone();
             for (int i = 0; i < getCountFloors(); ++i) {
-                ((Dwelling)clone).dwellingFloors[i] = (Floor) this.getFloor(i).clone();
+                ((Dwelling) clone).dwellingFloors[i] = (Floor) this.getFloor(i).clone();
             }
             return clone;
         } catch (CloneNotSupportedException e) {

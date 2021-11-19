@@ -283,12 +283,17 @@ public class OfficeBuilding implements Building, Serializable, Cloneable {
     }
 
     //Создайте метод getBestSpace() получения самого большого по площади офиса здания.
-    public float getBestSpace() {
-        float bestSpace = 0;
+    @Override
+    public Space getBestSpace() {
+        float max = 0;
+        Space bestSpace = null;
         Node currentNode = head;
         int count = getCountFloors();
         for (int i = 0; i < count; ++i) {
-            if (bestSpace < currentNode.floor.getBestSpace()) bestSpace = currentNode.floor.getBestSpace();
+            if (max < currentNode.floor.getBestSpace().getArea()) {
+                bestSpace = currentNode.floor.getBestSpace();
+                max = bestSpace.getArea();
+            }
             currentNode = currentNode.next;
         }
         return bestSpace;

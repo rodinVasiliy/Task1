@@ -27,7 +27,7 @@ public interface Floor {
     void eraseSpace(int num);
 
     // получения лучшего помещения на этаже
-    float getBestSpace();
+    Space getBestSpace();
 
     Object clone();
 

@@ -28,7 +28,7 @@ public interface Building  {
     void eraseSpace(int num);
 
     // получение лучшего помещения
-    float getBestSpace();
+    Space getBestSpace();
 
     Space[] getSortedSpaces();
 

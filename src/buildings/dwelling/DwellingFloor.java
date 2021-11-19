@@ -88,12 +88,16 @@ public class DwellingFloor implements Floor, Serializable, Cloneable {
     }
 
     @Override
-    public float getBestSpace() {
+    public Space getBestSpace() {
         float max = 0;
+        Space bestSpace = null;
         for (Space flat : flats) {
-            if (flat.getArea() > max) max = flat.getArea();
+            if (flat.getArea() > max) {
+                max = flat.getArea();
+                bestSpace = flat;
+            }
         }
-        return max;
+        return bestSpace;
     }
 
     @Override
@@ -132,10 +136,10 @@ public class DwellingFloor implements Floor, Serializable, Cloneable {
         Object copy = null;
         try {
             copy = super.clone();
-            ((DwellingFloor)copy).flats = new Space[this.getCountSpaces()];
+            ((DwellingFloor) copy).flats = new Space[this.getCountSpaces()];
             for (int i = 0; i < getCountSpaces(); ++i) {
                 // ((DwellingFloor)copy).flats[i] = new Flat(this.getSpace(i).getArea(), this.getSpace(i).getCountRooms());
-                ((DwellingFloor)copy).flats[i] = (Space) this.getSpace(i).clone();
+                ((DwellingFloor) copy).flats[i] = (Space) this.getSpace(i).clone();
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
