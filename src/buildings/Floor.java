@@ -1,6 +1,6 @@
 package buildings;
 
-public interface Floor {
+public interface Floor extends Iterable<Space>, Comparable<Floor>{
 
     // получения количества помещений на этаже
     int getCountSpaces();
@@ -30,5 +30,7 @@ public interface Floor {
     Space getBestSpace();
 
     Object clone();
+
+    java.util.Iterator<Space> iterator();
 
 }

@@ -10,6 +10,14 @@ import java.util.Map;
 public class Hotel extends Dwelling {
     private final float[] coef = {0.25F, 0.5F, 1F, 1.25F, 1.5F};
 
+    public Hotel(int floorsCount, int[] spacesCounts){
+        super(floorsCount, spacesCounts);
+    }
+
+    public Hotel(Floor... dwellingFloors1){
+        super(dwellingFloors1);
+    }
+
     public int getCountStars() {
         int max = 0;
         for (int i = 0; i < getCountFloors(); ++i) {

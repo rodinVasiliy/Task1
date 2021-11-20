@@ -5,9 +5,35 @@ import buildings.Floor;
 import buildings.Space;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 public class DwellingFloor implements Floor, Serializable, Cloneable {
     private Space[] flats;
+
+    private class ImplIterator implements Iterator<Space> {
+        // Это текущий элемент в итераторе и одновременно счётчик
+        int current = 0;
+
+        // Возвращает true, если есть следующий элемент (символ)
+        @Override
+        public boolean hasNext() {
+            // простая проверка - если текущий элемент равен количеству символов в строке, то есть
+            // указвает на последний символ в строке, значит следущий элемент отсутствует и вернём false
+            return current != getCountSpaces();
+        }
+
+        // Возвращает следующий элемент в итерации (символ)
+        @Override
+        public Space next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return getSpace(current++);
+        }
+    }
 
     public DwellingFloor(int count) {
         flats = new Space[count];
@@ -148,12 +174,23 @@ public class DwellingFloor implements Floor, Serializable, Cloneable {
     }
 
     @Override
+    public Iterator<Space> iterator() {
+        return new ImplIterator();
+    }
+
+
+    @Override
     public int hashCode() {
         int result = getCountSpaces();
         for (int i = 0; i < getCountSpaces(); ++i) {
             result ^= this.getSpace(i).hashCode();
         }
         return result;
+    }
+
+    @Override
+    public int compareTo(Floor o) {
+        return this.getCountSpaces() - o.getCountSpaces();
     }
 
 }

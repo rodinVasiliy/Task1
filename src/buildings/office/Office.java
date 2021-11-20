@@ -96,4 +96,8 @@ public class Office implements Space, Serializable, Cloneable {
         return getCountRooms() ^ intFirstByte ^ intSecondByte;
     }
 
+    @Override
+    public int compareTo(Space o) {
+        return (int) (this.getArea() - o.getArea());
+    }
 }

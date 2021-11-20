@@ -1,16 +1,50 @@
 package buildingStreams;
 
 import buildings.*;
+import buildings.dwelling.Dwelling;
 import buildings.office.Office;
 import buildings.office.OfficeBuilding;
 import buildings.office.OfficeFloor;
+import factories.BuildingFactory;
+import factories.DwellingFactory;
 
 import java.io.*;
+import java.util.Comparator;
 import java.util.Formatter;
 import java.util.Scanner;
 
 
 public class Buildings {
+
+    static BuildingFactory buildingFactory = new DwellingFactory();
+
+    void setBuildingFactory(BuildingFactory buildingFactory1) {
+        buildingFactory = buildingFactory1;
+    }
+
+    public static Space createSpace(double area) {
+        return buildingFactory.createSpace(area);
+    }
+
+    public Space createSpace(int roomsCount, double area) {
+        return buildingFactory.createSpace(roomsCount, area);
+    }
+
+    public Floor createFloor(int spacesCount) {
+        return buildingFactory.createFloor(spacesCount);
+    }
+
+    public Floor createFloor(Space[] spaces) {
+        return buildingFactory.createFloor(spaces);
+    }
+
+    public Building createBuilding(int floorsCount, int[] spacesCounts) {
+        return buildingFactory.createBuilding(floorsCount, spacesCounts);
+    }
+
+    public Building createBuilding(Floor[] floors) {
+        return buildingFactory.createBuilding(floors);
+    }
 
     // записи данных о здании в байтовый поток
     public static void outputBuilding(Building building, OutputStream out) {
@@ -41,21 +75,19 @@ public class Buildings {
         try {
             in1 = new DataInputStream(in);
             int numberFloor = in1.readInt();
-            building = new OfficeBuilding(new Floor[numberFloor]);
+            building = buildingFactory.createBuilding(new Floor[numberFloor]);
+            // building = new OfficeBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
-                Floor currentFloor = new OfficeFloor();
-                building.setFloor(i, currentFloor);
 
                 int numberSpaces = in1.readInt();
+                Floor currentFloor = buildingFactory.createFloor(numberSpaces);
 
                 for (int j = 0; j < numberSpaces; j++) {
-                    Space currentSpace = new Office();
                     int numberRooms = in1.readInt();
-                    currentSpace.setCountRooms(numberRooms);
                     float area = in1.readFloat();
-                    currentSpace.setSpace(area);
-                    currentFloor.addSpace(j, currentSpace);
+                    currentFloor.addSpace(j, buildingFactory.createSpace(numberRooms, area));
                 }
+                building.setFloor(i, currentFloor);
             }
 
         } catch (IOException e) {
@@ -100,19 +132,16 @@ public class Buildings {
         Building building = null;
         try {
             int numberFloor = (int) getNextIntFromTokenaizer(in1);
-            building = new OfficeBuilding(new Floor[numberFloor]);
+            building = buildingFactory.createBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
-                Floor currentFloor = new OfficeFloor();
-                building.setFloor(i, currentFloor);
                 int numberSpaces = (int) getNextIntFromTokenaizer(in1);
+                Floor currentFloor = buildingFactory.createFloor(numberSpaces);
                 for (int j = 0; j < numberSpaces; j++) {
-                    Space currentSpace = new Office();
-                    currentFloor.addSpace(j, currentSpace);
                     int numberRooms = (int) getNextIntFromTokenaizer(in1);
-                    currentSpace.setCountRooms(numberRooms);
                     float area = (float) getNextIntFromTokenaizer(in1);
-                    currentSpace.setSpace(area);
+                    currentFloor.addSpace(j, buildingFactory.createSpace(numberRooms, area));
                 }
+                building.setFloor(i, currentFloor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,7 +213,7 @@ public class Buildings {
                 String tmp = scanner.next();
             }
             numberSpaces = scanner.nextInt();
-            floorsArray[i] = new OfficeFloor(numberSpaces);
+            floorsArray[i] = buildingFactory.createFloor(numberSpaces);
             for (int j = 0; j < numberSpaces; j++) {
                 while (!scanner.hasNextInt()) {
                     String tmp = scanner.next();
@@ -194,11 +223,38 @@ public class Buildings {
                     String tmp = scanner.next();
                 }
                 area = scanner.nextFloat();
-                floorsArray[i].addSpace(j, new Office(area, numberRooms));
+                floorsArray[i].addSpace(j, buildingFactory.createSpace(numberRooms, area));
             }
         }
-        Building redBuilding = new OfficeBuilding(floorsArray);
-        return redBuilding;
+
+        return buildingFactory.createBuilding(floorsArray);
     }
+
+    public static <T extends Comparable<T>> void sort(T[] objects) {
+        for (int i = 0; i < objects.length; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < objects.length; j++) {
+                if (objects[j].compareTo(objects[minIndex]) < 0)
+                    minIndex = j;
+            }
+            T swapBuf = objects[i];
+            objects[i] = objects[minIndex];
+            objects[minIndex] = swapBuf;
+        }
+    }
+
+    public static <T> void sort(T[] objects, Comparator<T> comparator) {
+        for (int i = 0; i < objects.length; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < objects.length; j++) {
+                if (comparator.compare(objects[j], objects[minIndex]) < 0)
+                    minIndex = j;
+            }
+            T swapBuf = objects[i];
+            objects[i] = objects[minIndex];
+            objects[minIndex] = swapBuf;
+        }
+    }
+
 
 }

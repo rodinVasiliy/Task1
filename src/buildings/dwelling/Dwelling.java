@@ -7,9 +7,33 @@ import buildings.*;
 import buildings.office.OfficeFloor;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Dwelling implements Building, Serializable, Cloneable {
     private Floor[] dwellingFloors;
+
+    private class ImplIterator implements Iterator<Floor> {
+        // Это текущий элемент в итераторе и одновременно счётчик
+        int current = 0;
+
+        // Возвращает true, если есть следующий элемент (символ)
+        @Override
+        public boolean hasNext() {
+            // простая проверка - если текущий элемент равен количеству символов в строке, то есть
+            // указвает на последний символ в строке, значит следущий элемент отсутствует и вернём false
+            return current != getCountFloors();
+        }
+
+        // Возвращает следующий элемент в итерации (символ)
+        @Override
+        public Floor next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return getFloor(current++);
+        }
+    }
 
     public Dwelling(int countOfFloors, int... countFlatsArray) {
         dwellingFloors = new Floor[countOfFloors];
@@ -235,4 +259,8 @@ public class Dwelling implements Building, Serializable, Cloneable {
     }
 
 
+    @Override
+    public Iterator<Floor> iterator() {
+        return new ImplIterator();
+    }
 }

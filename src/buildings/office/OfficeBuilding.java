@@ -8,8 +8,37 @@ import buildings.Floor;
 import buildings.Space;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class OfficeBuilding implements Building, Serializable, Cloneable {
+
+    private class ImplIterator implements Iterator<Floor> {
+        // Это текущий элемент в итераторе и одновременно счётчик
+        int current = 0;
+
+        // Возвращает true, если есть следующий элемент (символ)
+        @Override
+        public boolean hasNext() {
+            // простая проверка - если текущий элемент равен количеству символов в строке, то есть
+            // указвает на последний символ в строке, значит следущий элемент отсутствует и вернём false
+            return current != getCountFloors();
+        }
+
+        // Возвращает следующий элемент в итерации (символ)
+        @Override
+        public Floor next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return getFloor(current++);
+        }
+    }
+
+    @Override
+    public Iterator<Floor> iterator() {
+        return new ImplIterator();
+    }
 
     private static class Node implements Serializable {
         Floor floor;
@@ -89,13 +118,13 @@ public class OfficeBuilding implements Building, Serializable, Cloneable {
     }
 
     // Конструктор может принимать количество этажей и массив количества офисов по этажам.
-/*   public OfficeBuilding(int num, int[] arr) {
+    public OfficeBuilding(int num, int[] arr) {
         if (num == 0) {
             head = null;
             return;
         }
         if (num == 1) {
-            head = new Node(new F);
+            head = new Node(new OfficeFloor(arr[0]));
             head.prev = head;
             head.next = head;
             return;
@@ -112,7 +141,7 @@ public class OfficeBuilding implements Building, Serializable, Cloneable {
         currentNode.prev = head;
         head = currentNode;
 
-    }*/
+    }
 
     // Конструктор может принимать массив этажей офисного здания.
     public OfficeBuilding(Floor... officeFloors) {

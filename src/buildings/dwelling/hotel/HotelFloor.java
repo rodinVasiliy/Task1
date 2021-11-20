@@ -4,16 +4,18 @@ import buildings.Floor;
 import buildings.Space;
 import buildings.dwelling.DwellingFloor;
 
+import java.util.Objects;
+
 public class HotelFloor extends DwellingFloor {
     private final int COUNT_STARS = 1;
 
     private int countStars = COUNT_STARS;
 
-    HotelFloor(int countSpaces) {
+    public HotelFloor(int countSpaces) {
         super(countSpaces);
     }
 
-    HotelFloor(Space... space) {
+    public HotelFloor(Space... space) {
         super(space);
     }
 
@@ -47,6 +49,8 @@ public class HotelFloor extends DwellingFloor {
         }
         return true;
     }
+
+
 
     @Override
     public int hashCode() {

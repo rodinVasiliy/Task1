@@ -1,6 +1,6 @@
 package buildings;
 
-public interface Space {
+public interface Space extends Comparable<Space>{
 
     int getCountRooms();
 

@@ -5,6 +5,8 @@ import buildings.Floor;
 import buildings.Space;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class OfficeFloor implements Floor, Serializable, Cloneable {
 
@@ -29,24 +31,33 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
             office = new Office();
             next = null;
         }
-
-
-/*        // TODO: удалить
-        @Override
-        public Node clone() {
-            try {
-                Node clone = (Node) super.clone();
-                // clone.office = (Space) office.clone();
-                clone.next = (Node) next.clone();
-                return clone;
-            } catch (CloneNotSupportedException e) {
-                throw new AssertionError();
-            }
-        }*/
     }
 
-
     private Node head;
+
+    // возможно стоит оптимизировать...
+    private class ImplIterator implements Iterator<Space> {
+        // Это текущий элемент в итераторе и одновременно счётчик
+        int current = 0;
+
+        // Возвращает true, если есть следующий элемент (символ)
+        @Override
+        public boolean hasNext() {
+            // простая проверка - если текущий элемент равен количеству символов в строке, то есть
+            // указвает на последний символ в строке, значит следущий элемент отсутствует и вернём false
+            return current != getCountSpaces();
+        }
+
+        // Возвращает следующий элемент в итерации (символ)
+        @Override
+        public Space next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return getSpace(current++);
+        }
+    }
+
 
     @Override
     public Object clone() {
@@ -55,6 +66,11 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
             floor.addNode(i, new Node(getNode(i)));
         }
         return floor;
+    }
+
+    @Override
+    public Iterator<Space> iterator() {
+        return new ImplIterator();
     }
 
     public int getCountSpaces() {
@@ -290,5 +306,9 @@ public class OfficeFloor implements Floor, Serializable, Cloneable {
         return result;
     }
 
+    @Override
+    public int compareTo(Floor o) {
+        return this.getCountSpaces() - o.getCountSpaces();
+    }
 
 }
